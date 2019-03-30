@@ -1,0 +1,23 @@
+---
+- host: webserver
+  become: yes
+  tasks:
+  - name: installing tomcat
+    apt:
+    - name: tomcat7
+      state: present
+  - name: installing java
+    apt:
+    - name: openjdk8
+      state: present
+    get_url:
+      url: https://s3.ap-south-1.amazonaws.com/praveendeploy/gameoflife.war
+      des: /opt/tomcat/webapps/gameoflife.war
+    notify:
+    - restart tomcat7  
+    handlers:
+    - name: restart tomcat7
+      service:
+        name: tomcat7
+        enabled: yes
+        state: restarted  
